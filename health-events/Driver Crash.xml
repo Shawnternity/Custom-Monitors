@@ -1,0 +1,19 @@
+<GenericPlugin>
+    <Application>
+        <monitoredAttributes>
+            <monitoredAttribute agentPluginName="EID" enabled="true" maType="PluginMonitored1" sensitivity="2" uiName="EventOccurred" usageValue="NotSpecified"/>
+        </monitoredAttributes>
+    </Application>
+    <AgentConfiguration>
+        <Plugin alias="EventLog" dllName="Com.Aternity.Agent.EventLogPlugin.dll" frequency="60000"/>
+        <Parameters>
+            <Parameter name="ReportAvailabilityTail" value="0"/>
+            <Parameter name="MaxEventsPerReport" value="2"/>
+            <Parameter name="logName.Matcher" value="RegexMatcher(System)"/>
+            <Parameter name="EntryType.Matcher" value="RegexMatcher(Critical)"/>
+            <Parameter name="EventID.Matcher" value="RangeMatcher(10111)"/>
+            <Parameter name="Source.Matcher" value="RegexMatcher(UserMode)"/>
+            <Parameter name="EventID.Mapper" value="EID.1"/>
+        </Parameters>
+    </AgentConfiguration>
+</GenericPlugin>

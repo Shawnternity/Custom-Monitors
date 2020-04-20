@@ -1,0 +1,18 @@
+<GenericPlugin>
+    <Application>
+        <monitoredAttributes>
+            <monitoredAttribute agentPluginName="ProtectionStatus" maType="PluginMonitored1" uiName="EventOccurred" units="Number"/>
+        </monitoredAttributes>
+        <contextualAttributes/>
+    </Application>
+    <AgentConfiguration>
+        <Plugin alias="WMI" dllName="WMIPlugin.dll" frequency="3600000"/>
+        <Threading executionTimeout="60000" useUniqueThread="false"/>
+        <Parameters>
+            <Parameter name="WqlQuery" value="select ProtectionStatus from Win32_EncryptableVolume where driveLetter='C:' and ProtectionStatus=0"/>
+            <Parameter name="NumAllowedExceptions" value="57"/>
+            <Parameter name="ShouldImpersonate" value="false"/>
+            <Parameter name="Namespace" value="\root\CIMV2\Security\MicrosoftVolumeEncryption"/>
+        </Parameters>
+    </AgentConfiguration>
+</GenericPlugin>

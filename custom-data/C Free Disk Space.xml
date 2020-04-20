@@ -1,0 +1,22 @@
+<GenericPlugin>
+    <Application>
+        <monitoredAttributes>
+            <monitoredAttribute agentPluginName="PercentFreeSpace" maType="PluginMonitored1" uiName="Percent Free Space" units="Percent"/>
+            <monitoredAttribute agentPluginName="FreeMegabytes" maType="PluginMonitored2" uiName="Free Megabytes" units="MegaByte"/>
+        </monitoredAttributes>
+        <contextualAttributes>
+            <contextualAttribute agentPluginName="Name" saType="PluginContextual1" uiName="Name"/>
+        </contextualAttributes>
+        <staticAttributes/>
+    </Application>
+    <AgentConfiguration>
+        <Plugin alias="WMI" dllName="WMIPlugin.dll" frequency="900000"/>
+        <Threading executionTimeout="60000" useUniqueThread="false"/>
+        <Parameters>
+            <Parameter name="WqlQuery" value="SELECT Name, FreeMegabytes, PercentFreeSpace FROM Win32_PerfFormattedData_PerfDisk_LogicalDisk WHERE  Name ='c:'"/>
+            <Parameter name="NumAllowedExceptions" value="5"/>
+            <Parameter name="ShouldImpersonate" value="false"/>
+            <Parameter name="Namespace" value="root\cimv2"/>
+        </Parameters>
+    </AgentConfiguration>
+</GenericPlugin>
