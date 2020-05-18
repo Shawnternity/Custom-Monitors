@@ -2,35 +2,31 @@
 Description of scripts or xml documents for retraival of custom data. 
 
 
-1. 		**Monitor Name: 	Certificate Expires**
+## 		Monitor Name: 	Certificate Expires
+		````
 		Description: 	Creates a health event when the device certificate is 7 days before expiration
-		
 		Technology:	Powershell Script
-		
 		Frequency:
-	
-2. 		**Monitor Name: 	Slow Outlook Plugins Boot Time**
+		````
+		
+## 		Monitor Name: 	Slow Outlook Plugins Boot Time
+		````
 		Description: 	Creates a health event whenever an Outlook’s addon launch takes more 5 sec during Outlook launch. The event also sends a contextual with the Addon name and the launch time. 	
-		
 		Technology:		Powershell Script
-		
 		Frequency:
-	
-3. 		**Monitor Name: 	Shutdown Restart By**
+		````
+## 		Monitor Name: 	Shutdown Restart By
+		````
 		Description: 	This event is written when an application causes the system to restart, or when the user initiates a restart or shut down by clicking Start or pressing CTRL+ALT+DELETE, and then clicking Shut Down. 	
-		
 		Technology:		Event Viewer
-		
 		Frequency:
-	
-4. 		Monitor Name: 	Driver Crash
-		
+		````
+## 		Monitor Name: 	Driver Crash
+		````
 		Description: 	Alerts when a device is offline due to driver crash.  	
-		
 		Technology:		Event Viewer
-		
 		Frequency:
-	
+		````
 5. 		Monitor Name: 	Display Driver Crash
 		
 		Description: 	  	
