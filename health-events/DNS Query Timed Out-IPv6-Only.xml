@@ -1,0 +1,29 @@
+<GenericPlugin>
+    <Application>
+        <monitoredAttributes>
+            <monitoredAttribute agentPluginName="EventID" enabled="true" maType="PluginMonitored1" sensitivity="2" uiName="EventOccurred" usageValue="NotSpecified"/>
+        </monitoredAttributes>
+        <contextualAttributes>
+            <contextualAttribute agentPluginName="QueryName" maxValueCount="60000" saType="PluginContextual1" uiName="QueryName"/>
+            <contextualAttribute agentPluginName="AddressLength" maxValueCount="60000" saType="PluginContextual2" uiName="AddressLength"/>
+            <contextualAttribute agentPluginName="Address" maxValueCount="60000" saType="PluginContextual3" uiName="Address"/>
+        </contextualAttributes>
+    </Application>
+    <AgentConfiguration>
+        <Plugin alias="EventLog" dllName="Com.Aternity.Agent.EventLogPlugin.dll" frequency="60000"/>
+        <Parameters>
+            <Parameter name="ReportAvailabilityTail" value="0"/>
+            <Parameter name="logName.Matcher" value="RegexMatcher(Microsoft-Windows-DNS-Client/Operational)"/>
+            <Parameter name="EventID.Matcher" value="RangeMatcher(1015)"/>
+            <Parameter name="Source.Matcher" value="RegexMatcher(Microsoft-Windows-DNS-Client)"/>
+            <Parameter name="EventID.Mapper" value="EventID.1"/>
+            <Parameter name="Message.Matcher" value="RegexMatcher(28)"/>
+            <Parameter name="Message_1.Mapper" value="QueryName.1"/>
+            <Parameter name="Message_1.Formatter" value="XpathFormatter(//Event/EventData/Data[@Name='QueryName'])"/>
+            <Parameter name="Message_2.Mapper" value="AddressLength.1"/>
+            <Parameter name="Message_2.Formatter" value="XpathFormatter(//Event/EventData/Data[@Name='AddressLength'])"/>
+            <Parameter name="Message_3.Mapper" value="Address.1"/>
+            <Parameter name="Message_3.Formatter" value="XpathFormatter(//Event/EventData/Data[@Name='Address'])"/>
+        </Parameters>
+    </AgentConfiguration>
+</GenericPlugin>
