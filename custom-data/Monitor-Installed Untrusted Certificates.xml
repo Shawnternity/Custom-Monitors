@@ -1,0 +1,55 @@
+<GenericPlugin>
+    <Application>
+        <monitoredAttributes>
+            <monitoredAttribute agentPluginName="UnTrusted Certs Installed" maType="PluginMonitored1" uiName="Qty of Untrusted Certs" units="Number"/>
+        </monitoredAttributes>
+        <contextualAttributes>
+            <contextualAttribute agentPluginName="Untrusted Certs" saType="PluginContextual1" uiName="Untrusted Certs Status"/>
+        </contextualAttributes>
+        <staticAttributes/>
+    </Application>
+    <AgentConfiguration>
+        <Plugin alias="PowerShell" dllName="Com.Aternity.Agent.PowerShellPlugin.dll" frequency="10800000" invokeWhenNotReporting="true" reportingFrequency="10800000"/>
+        <Parameters>
+            <Parameter name="ScriptTimeout" value="10000"/>
+            <Parameter name="ScriptContext" value="System"/>
+            <Parameter name="Script" value="ScriptCdata">
+                <Script><![CDATA[<#
+.SYNOPSIS
+Report on the Presence and Volume of Untrusted Certificates on devices
+
+.DESCRIPTION
+Checks the SParentPath: Microsoft.PowerShell.Security\Certificate::LocalMachine\Disallowed 
+to see if there are any untrusted certificates and quantity
+#>
+
+try
+{
+	# Load Aternity Agent Module
+    Add-Type -Path $env:STEELCENTRAL_ATERNITY_AGENT_HOME\ActionExtensionsMethods.dll
+    
+$check = Get-ChildItem Cert:\LocalMachine\Disallowed | measure-object
+if ($check.Count -gt 0)
+    {
+        $UntrustedCertificates="Detected"
+        $Qty=$check.count
+        [ActionExtensionsMethods.PowershellPluginMethods]::SetAttributeValueDouble("UnTrusted Certs Installed",$Qty)
+        [ActionExtensionsMethods.PowershellPluginMethods]::SetAttributeValueString("Untrusted Certs",$UntrustedCertificates)
+     }
+else
+    {
+        $UntrustedCertificates="Not Detected"
+        $Qty=$check.count
+        [ActionExtensionsMethods.PowershellPluginMethods]::SetAttributeValueDouble("UnTrusted Certs Installed",$Qty)
+        [ActionExtensionsMethods.PowershellPluginMethods]::SetAttributeValueString("Untrusted Certs",$UntrustedCertificates)
+    }
+        
+}
+catch
+{
+    [ActionExtensionsMethods.ActionExtensionsMethods]::SetFailed($_.Exception.Message)
+} ]]></Script>
+            </Parameter>
+        </Parameters>
+    </AgentConfiguration>
+</GenericPlugin>
