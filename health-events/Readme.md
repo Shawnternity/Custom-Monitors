@@ -34,3 +34,7 @@ Description of scripts or xml documents for retraival of custom data.
 	Description: Look for Events for DNS queries timeout of failed over DNS server queries with IPv6  	
 	Technology:	Event Viewer / Windows Event logs
 	Frequency: 	Every Minute
+###	Pending Reboot Health Event	
+	Description: Check for the registry entries on endpoint as well as check for WMI method for SCCM pending reboot flag  	
+	Technology:	Powershell Script
+	Frequency: 	Based on use case it can be set for frequency. 
