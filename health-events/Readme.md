@@ -34,7 +34,11 @@ Description of scripts or xml documents for retraival of custom data.
 	Description: Look for Events for DNS queries timeout of failed over DNS server queries with IPv6  	
 	Technology:	Event Viewer / Windows Event logs
 	Frequency: 	Every Minute
-###	Pending Reboot Health Event	
+###	Pending Reboot Health Event	Powershell Script
 	Description: Check for the registry entries on endpoint as well as check for WMI method for SCCM pending reboot flag  	
 	Technology:	Powershell Script
-	Frequency: 	Based on use case it can be set for frequency
+	Frequency: 	will be controlled at the monitor tree level inside XML
+###	Pending Reboot Health Event	Monitor XML
+	Description: Create a monitor under device health bucket to check for Pending Reboot Flag  	
+	Technology:	XML
+	Frequency: 	case by case bases, based on your use case. Change the setting of frequency under <AgentConfiguration> parameter
