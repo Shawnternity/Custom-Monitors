@@ -37,4 +37,4 @@ Description of scripts or xml documents for retraival of custom data.
 ###	Pending Reboot Health Event	
 	Description: Check for the registry entries on endpoint as well as check for WMI method for SCCM pending reboot flag  	
 	Technology:	Powershell Script
-	Frequency: 	Based on use case it can be set for frequency. 
+	Frequency: 	Based on use case it can be set for frequency
