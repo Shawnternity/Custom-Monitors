@@ -1,0 +1,97 @@
+<GenericPlugin>
+    <Application>
+        <monitoredAttributes>
+            <monitoredAttribute agentPluginName="EventOccurred" maType="PluginMonitored1" uiName="EventOccurred" units="Number"/>
+        </monitoredAttributes>
+        <contextualAttributes>
+            <contextualAttribute agentPluginName="Component" saType="PluginContextual1" uiName="Component Type"/>
+            <contextualAttribute agentPluginName="ComponentVersion" saType="PluginContextual2" uiName="Component Version Type"/>
+            <contextualAttribute agentPluginName="SubComponent" saType="PluginContextual3" uiName="Sub Component Type"/>
+            <contextualAttribute agentPluginName="SubComponentVersion" saType="PluginContextual4" uiName="Sub Component Version Type"/>
+            <contextualAttribute agentPluginName="Details" saType="PluginContextual5" uiName="Details"/>
+            <contextualAttribute agentPluginName="Error" saType="PluginContextual6" uiName="Error"/>
+            <contextualAttribute agentPluginName="ApplicationName" saType="ApplicationName" uiName="Application Name"/>
+        </contextualAttributes>
+        <staticAttributes/>
+    </Application>
+    <AgentConfiguration>
+        <Plugin alias="PowerShell" dllName="Com.Aternity.Agent.PowerShellPlugin.dll" frequency="60000" invokeWhenNotReporting="true" reportingFrequency="60000"/>
+        <Parameters>
+            <Parameter name="ScriptTimeout" value="20000"/>
+            <Parameter name="ScriptContext" value="System"/>
+            <Parameter name="Script" value="ScriptCdata">
+                <Script><![CDATA[try
+{
+    Add-Type -Path $env:STEELCENTRAL_ATERNITY_AGENT_HOME\ActionExtensionsMethods.dll  
+    $AtStatus = $false
+    $AtDetails = "Current Statuses: ["
+    if (Get-ChildItem "HKLM:\Software\Microsoft\Windows\CurrentVersion\Component Based Servicing\RebootPending" -EA Ignore) { $AtDetails+=" RebootPending;"; $AtStatus = $true }
+    if (Get-Item "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\RebootRequired" -EA Ignore) { $AtDetails+=" RebootRequired;"; $AtStatus = $true }
+    if (Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager" -Name PendingFileRenameOperations -EA Ignore) { $AtDetails+=" PendingFileRenameOperations;"; $AtStatus = $true }
+    try 
+    { 
+        $util = [wmiclass]"\\.\root\ccm\clientsdk:CCM_ClientUtilities"
+        $status = $util.DetermineIfRebootPending()
+        if(($null -ne $status) -and $status.RebootPending)
+        {
+            $AtDetails+=" RebootPending (WMI);"; $AtStatus = $true
+        }
+    }
+    catch{}
+    
+    if ($AtStatus -eq $true )
+    {
+        $AtDetails+=" ]"
+        [ActionExtensionsMethods.PowershellPluginMethods]::SetComponent("System")
+        [ActionExtensionsMethods.PowershellPluginMethods]::SetDetails($AtDetails)
+        [ActionExtensionsMethods.PowershellPluginMethods]::SetComponentType("Operation System")
+        [ActionExtensionsMethods.PowershellPluginMethods]::SetEventOccurred()
+    }
+    else
+    {
+        #"Do nothing since not health event should be generated"
+    }
+}
+catch
+{
+    [ActionExtensionsMethods.ActionExtensionsMethods]::SetFailed($_.Exception.Message)
+}
+
+# SIG # Begin signature block
+# MIIFowYJKoZIhvcNAQcCoIIFlDCCBZACAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
+# gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUoeGdxze2Ldz7Zdguju8Bjrdr
+# imKgggMsMIIDKDCCAhCgAwIBAgIQNk2UGrcfX4pDAcOJ0P2SWjANBgkqhkiG9w0B
+# AQsFADAsMSowKAYDVQQDDCFBdGVybml0eSBSZW1lZGlhdGlvbiBDb2RlIFNpZ25p
+# bmcwHhcNMjAwNzE2MDQwMjU0WhcNMjEwNzE2MDQyMjU0WjAsMSowKAYDVQQDDCFB
+# dGVybml0eSBSZW1lZGlhdGlvbiBDb2RlIFNpZ25pbmcwggEiMA0GCSqGSIb3DQEB
+# AQUAA4IBDwAwggEKAoIBAQCvxv2YgZzvTL9HaK1pMWqr2goYgQgYyhAGCqMhFhoG
+# GcCAYwwx6FNGB/qf310syXwvzFDyK+mXf4aOV6Mm83deCPvt/cl0bXCAhC424UXK
+# meXELMQkNpG1a0QoVDZGVj4YlaZt5UkGIPghvdxDQvkxbrVQwm2f0EtQQMWpSrK4
+# CS7jUhgiziE0jZQ2tKUG2/LG9DCi3OxuP9bvCvoxraxe9B5wcHnAySlZBAS9MCKA
+# V6VZQakcM7/EiFTs2jHT0Go7zxRzd2Qnc0ae1gT/vnkiGOXV4rkwa0PjveW8miap
+# Sazx9jNvnW2SIQZSreGAsRT5iEIZyiLB81y9PDBNqrjdAgMBAAGjRjBEMA4GA1Ud
+# DwEB/wQEAwIHgDATBgNVHSUEDDAKBggrBgEFBQcDAzAdBgNVHQ4EFgQUbLQ7fX1b
+# osXg713EGYXSwV647c4wDQYJKoZIhvcNAQELBQADggEBAFAcN6uk5z89vM6sQFRk
+# 1q+7Zyqr5KrP6yDJVOrFChU+9SuZFCXtRFNj9oHtSk39HbLFWwil7q6uxtmTb20x
+# b3CkKSVO5ic2aYqZp6r+PqMI8jVEoQ7AAtQ/KlYw5HFexR629kAS27dXNi9uquXz
+# R6y76uqtd9/WjX3yscvi9ZTh9aRTugkdAo6uYctzi+KTi8ONMdr7Yez8TEdtseIE
+# f3KcIlI5XcWNicYLjEMG8rfMOk4gt8KD12mF1kqMGZp/V4nUJYx81jRU9X/vaelb
+# gnoL66BmAY0rLcpo0g1Ymwbj9pFvDS+I27oS7FGELS18eo+p8AK4jUQRmakxKfVW
+# iuIxggHhMIIB3QIBATBAMCwxKjAoBgNVBAMMIUF0ZXJuaXR5IFJlbWVkaWF0aW9u
+# IENvZGUgU2lnbmluZwIQNk2UGrcfX4pDAcOJ0P2SWjAJBgUrDgMCGgUAoHgwGAYK
+# KwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGCNwIB
+# BDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQU
+# 6j2/LSf4RoIq7LVhULLzgrlGiJQwDQYJKoZIhvcNAQEBBQAEggEAOixaF1itKpIM
+# Zute5biWUJidl1fhCBTudnOV2D4L8HJ/YDCCT7pXqnYVv2y0WnE+De0J0ekt6cxA
+# pIeSoif2msQPE7r45S/yzzTUSlosesC/uPt0vpbBq/apBlgqth3AWBlsp5ew3p4g
+# dYuqBH8qD8AVHXvipZy1phZbzao9Pgi+HoKD5n5umJfP6Zt/RmWbS65Guw6kxLR7
+# 5Qkkq3gK/dmYW/YwwX8n8Rz5CJNyhMXgD7nPJEuF3KVmd1liEUC1ZEzzg0dJGLpn
+# BwXgETyyINYxHicNXaQyQnTcgb3iLtm6FOEoVfIqEBON5y6vOkL8Ko8hdlgvTeBr
+# CtgToUVk5Q==
+# SIG # End signature block
+]]></Script>
+            </Parameter>
+        </Parameters>
+    </AgentConfiguration>
+</GenericPlugin>
