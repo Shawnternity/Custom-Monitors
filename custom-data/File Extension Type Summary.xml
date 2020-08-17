@@ -1,0 +1,143 @@
+<GenericPlugin>
+    <Application>
+        <monitoredAttributes>
+            <monitoredAttribute agentPluginName="DummyMonitoredAttribute" maType="PluginMonitored1" uiName="DummyMonitoredAttribute" units="Number"/>
+        </monitoredAttributes>
+        <contextualAttributes>
+            <contextualAttribute agentPluginName="Ext1" saType="PluginContextual1" uiName="ExtensionGroup1"/>
+            <contextualAttribute agentPluginName="Ext2" saType="PluginContextual2" uiName="ExtensionGroup2"/>
+            <contextualAttribute agentPluginName="Ext3" saType="PluginContextual3" uiName="ExtensionGroup3"/>
+            <contextualAttribute agentPluginName="Ext4" saType="PluginContextual4" uiName="ExtensionGroup4"/>
+            <contextualAttribute agentPluginName="Ext5" saType="PluginContextual5" uiName="ExtensionGroup5"/>
+            <contextualAttribute agentPluginName="Ext6" saType="PluginContextual6" uiName="ExtensionGroup6"/>
+            <contextualAttribute agentPluginName="Ext7" saType="PluginContextual7" uiName="ExtensionGroup7"/>
+            <contextualAttribute agentPluginName="Ext8" saType="PluginContextual8" uiName="ExtensionGroup8"/>
+            <contextualAttribute agentPluginName="Ext9" saType="PluginContextual9" uiName="ExtensionGroup9"/>
+            <contextualAttribute agentPluginName="Ext10" saType="PluginContextual10" uiName="ExtensionGroup10"/>
+            <contextualAttribute agentPluginName="Ext11" saType="PluginContextual11" uiName="ExtensionGroup11"/>
+            <contextualAttribute agentPluginName="Ext12" saType="PluginContextual12" uiName="ExtensionGroup12"/>
+            <contextualAttribute agentPluginName="Ext13" saType="PluginContextual13" uiName="ExtensionGroup13"/>
+            <contextualAttribute agentPluginName="Ext14" saType="PluginContextual14" uiName="ExtensionGroup14"/>
+            <contextualAttribute agentPluginName="Ext15" saType="PluginContextual15" uiName="ExtensionGroup15"/>
+            <contextualAttribute agentPluginName="Ext16" saType="PluginContextual16" uiName="ExtensionGroup16"/>
+        </contextualAttributes>
+        <staticAttributes/>
+    </Application>
+    <AgentConfiguration>
+        <Plugin alias="PowerShell" dllName="Com.Aternity.Agent.PowerShellPlugin.dll" frequency="3600000" invokeWhenNotReporting="true" reportingFrequency="3600000"/>
+        <Parameters>
+            <Parameter name="ScriptTimeout" value="70000"/>
+            <Parameter name="ScriptContext" value="System"/>
+            <Parameter name="Script" value="ScriptCdata">
+                <Script><![CDATA[try
+{
+        # Sets Custom Attribute 3 with the total number of pages printed
+        # Set new environment for Action Extensions Methods 
+        Add-Type -Path $env:STEELCENTRAL_ATERNITY_AGENT_HOME\ActionExtensionsMethods.dll
+
+$DummyMonitoredAttribute=1
+$extensionlist = Get-ChildItem -path C:\Users -Recurse | where {$_.extension} | Select-Object Extension, @{Name="Kbytes";Expression={"{0:N0}" -f ($_.Length / 1Kb) }} |group extension|select Name,@{l='TotalKB';e={$_.Group | Measure-Object -Property kbytes -sum|select -expand sum}} | sort-object -Property "TotalKB" -descending | select -first 16
+$count=1
+foreach($extension in $extensionlist)
+{
+if ($count -lt 17)
+    {
+    if($count -eq 1)
+        {
+        $ext1=$extension.Name + ": " + $extension.TotalKB
+        }
+    elseif($count -eq 2)
+        {
+        $ext2=$extension.Name + ": " + $extension.TotalKB
+        }
+    elseif($count -eq 3)
+        {
+        $ext3=$extension.Name + ": " + $extension.TotalKB
+        }
+    elseif($count -eq 4)
+        {
+        $ext4=$extension.Name + ": " + $extension.TotalKB
+        }
+    elseif($count -eq 5)
+        {
+        $ext5=$extension.Name + ": " + $extension.TotalKB
+        }
+    elseif($count -eq 6)
+        {
+        $ext6=$extension.Name + ": " + $extension.TotalKB
+        }
+    elseif($count -eq 7)
+        {
+        $ext7=$extension.Name + ": " + $extension.TotalKB
+        }
+    elseif($count -eq 8)
+        {
+        $ext8=$extension.Name + ": " + $extension.TotalKB
+        }
+    elseif($count -eq 9)
+        {
+        $ext9=$extension.Name + ": " + $extension.TotalKB
+        }
+    elseif($count -eq 10)
+        {
+        $ext10=$extension.Name + ": " + $extension.TotalKB
+        }
+    elseif($count -eq 11)
+        {
+        $ext11=$extension.Name + ": " + $extension.TotalKB
+        }
+    elseif($count -eq 12)
+        {
+        $ext12=$extension.Name + ": " + $extension.TotalKB
+        }
+    elseif($count -eq 13)
+        {
+        $ext13=$extension.Name + ": " + $extension.TotalKB
+        }
+    elseif($count -eq 14)
+        {
+        $ext14=$extension.Name + ": " + $extension.TotalKB
+        }
+    elseif($count -eq 15)
+        {
+        $ext15=$extension.Name + ": " + $extension.TotalKB
+        }
+    elseif($count -eq 16)
+        {
+        $ext16=$extension.Name + ": " + $extension.TotalKB
+        }
+    $count=$count+1
+    }
+else
+    {
+    #Do nothing, we have maxed at 16
+    }
+
+    [ActionExtensionsMethods.PowerShellPluginMethods]::SetAttributeValueString("Ext1",$ext1)
+    [ActionExtensionsMethods.PowerShellPluginMethods]::SetAttributeValueString("Ext2",$ext2)
+    [ActionExtensionsMethods.PowerShellPluginMethods]::SetAttributeValueString("Ext3",$ext3)
+    [ActionExtensionsMethods.PowerShellPluginMethods]::SetAttributeValueString("Ext4",$ext4)
+    [ActionExtensionsMethods.PowerShellPluginMethods]::SetAttributeValueString("Ext5",$ext5)
+    [ActionExtensionsMethods.PowerShellPluginMethods]::SetAttributeValueString("Ext6",$ext6)
+    [ActionExtensionsMethods.PowerShellPluginMethods]::SetAttributeValueString("Ext7",$ext7)
+    [ActionExtensionsMethods.PowerShellPluginMethods]::SetAttributeValueString("Ext8",$ext8)
+    [ActionExtensionsMethods.PowerShellPluginMethods]::SetAttributeValueString("Ext9",$ext9)
+    [ActionExtensionsMethods.PowerShellPluginMethods]::SetAttributeValueString("Ext10",$ext10)
+    [ActionExtensionsMethods.PowerShellPluginMethods]::SetAttributeValueString("Ext11",$ext11)
+    [ActionExtensionsMethods.PowerShellPluginMethods]::SetAttributeValueString("Ext12",$ext12)
+    [ActionExtensionsMethods.PowerShellPluginMethods]::SetAttributeValueString("Ext13",$ext13)
+    [ActionExtensionsMethods.PowerShellPluginMethods]::SetAttributeValueString("Ext14",$ext14)
+    [ActionExtensionsMethods.PowerShellPluginMethods]::SetAttributeValueString("Ext15",$ext15)
+    [ActionExtensionsMethods.PowerShellPluginMethods]::SetAttributeValueString("Ext16",$ext16)
+    [ActionExtensionsMethods.PowerShellPluginMethods]::SetAttributeValueDouble("DummyMonitoredAttribute",$DummyMonitoredAttribute)
+}
+}
+catch
+{
+ #[ActionExtensionsMethods.ActionExtensionsMethods]::SetFailed($_.Exception.Message)
+}
+]]></Script>
+            </Parameter>
+        </Parameters>
+    </AgentConfiguration>
+</GenericPlugin>
