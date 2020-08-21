@@ -1,0 +1,20 @@
+<GenericPlugin>
+    <Application>
+        <monitoredAttributes>
+            <monitoredAttribute agentPluginName="EventID" enabled="true" maType="PluginMonitored1" sensitivity="5" uiName="GPO Denied 5313" units="Number" usageValue="NotSpecified"/>
+        </monitoredAttributes>
+        <contextualAttributes>
+            <contextualAttribute agentPluginName="Policy" maxValueCount="6000" saType="PluginContextual1" uiName="Policy" useForAvailabilty="false"/>
+        </contextualAttributes>
+    </Application>
+    <AgentConfiguration>
+        <Plugin alias="EventLog" dllName="Com.Aternity.Agent.EventLogPlugin.dll" frequency="60000"/>
+        <Parameters>
+            <Parameter name="logName.Matcher" value="RegexMatcher(Microsoft-Windows-GroupPolicy/Operational)"/>
+            <Parameter name="EventID.Matcher" value="RangeMatcher(5313)"/>
+			<Parameter name="EventID.Mapper"  value="EventId.1"/>
+            <Parameter name="Message_0.Formatter" value="XpathFormatter(//Event/EventData/Data[@Name='DescriptionString'])"/>
+			<Parameter name="Message_0.Mapper" value="Policy.1"/>
+        </Parameters>
+    </AgentConfiguration>
+</GenericPlugin>
